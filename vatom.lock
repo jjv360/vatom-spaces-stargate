@@ -1,0 +1,15 @@
+{
+  "id": "com.jjv360.stargate",
+  "name": "Stargate",
+  "version": "1.0.0",
+  "beta": true,
+  "personalPlugin": true,
+  "description": "Join the Stargate network.",
+  "longDescription": "Add a working Stargate to your space! Includes the ability to register your gate ID on the network, and to dial other gates if a valid DHD is nearby.",
+  "configuration": "After installing the plugin, add a gate by selecting Insert > Objects > Stargate.",
+  "category": "Navigation",
+  "businessId": "cDFoSSRVe4",
+  "price": 0,
+  "releaseNotes": "n/a",
+  "entrypoint": ""
+}
