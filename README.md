@@ -1,14 +1,14 @@
-# Vatom Template Plugin 🔌
+# Vatom Plugin: Stargate 🔌
 
-This plugin is designed to be used from within [Vatom Spaces](https://vatom.com).
+This plugin is designed to be used from within [Vatom Spaces](https://vatom.com). Adds a working Stargate to your space.
 
 ## Features
 
 - [ ] Stargate
-  - [ ] Click to activate (temporary, until DHDs work)
-  - [ ] Shader-based animation of the event horizon
-  - [ ] Light effects
-  - [ ] Sound effects
+  - [x] Click to activate (temporary, until DHDs work)
+  - [x] Shader-based animation of the event horizon
+  - [x] Light effects
+  - [x] Sound effects
   - [ ] Teleport user on enter
 - [ ] Stargate network
   - [ ] Give each stargate an automatically generated 9-digit alphabetic address
