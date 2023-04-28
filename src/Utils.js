@@ -93,8 +93,8 @@ export async function createLoopingAudio(src, volume = 1, extraFields = {}) {
 
 }
 
-/** Animate the volume of an audio player */
-export async function animateAudioVolume(objectID, fromVolume, toVolume, duration, initialDelay = 0) {
+/** Generic animation function. Calls the callback smoothly over time. */
+export async function animateValue(from, to, duration, initialDelay, callback) {
 
     // Do initial delay
     if (initialDelay) 
@@ -114,16 +114,27 @@ export async function animateAudioVolume(objectID, fromVolume, toVolume, duratio
 
         // Set new value
         let progress = (now - startedAt) / duration
-        let volume = fromVolume + (toVolume - fromVolume) * progress
+        let current = from + (to - from) * progress
+        callback(current)
+
+    }
+    
+    // Set final value
+    callback(to)
+
+}
+
+/** Animate the volume of an audio player */
+export async function animateAudioVolume(objectID, fromVolume, toVolume, duration, initialDelay = 0) {
+
+    // Animate
+    await animateValue(fromVolume, toVolume, duration, initialDelay, volume => {
+
+        // Set it
         SharedVars.plugin.objects.update(objectID, {
             'component:media-playback:audio-destination:volume': volume
         }, true)
 
-    }
-    
-    // Set final volume
-    SharedVars.plugin.objects.update(objectID, {
-        'component:media-playback:audio-destination:volume': toVolume
-    }, true)
+    })
 
 }
