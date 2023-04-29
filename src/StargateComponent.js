@@ -1,5 +1,5 @@
 import { BaseComponent } from "vatom-spaces-plugins"
-import { Queue, SharedVars, animateAudioVolume, animateValue, createLoopingAudio } from "./Utils"
+import { Queue, SharedVars, animateAudioVolume, animateValue, createLoopingAudio, generateAddress } from "./Utils"
 
 /**
  * Logic behind the Stargate.
@@ -29,7 +29,7 @@ export class StargateComponent extends BaseComponent {
     onLoad() {
 
         // Loaded
-        console.debug(`[Stargate] Loaded stargate component`)
+        console.debug(`[Stargate] Stargate active: address = ${this.address}`)
 
         // Remove chevron glow
         this.plugin.objects.update(this.objectID, {
@@ -38,26 +38,31 @@ export class StargateComponent extends BaseComponent {
 
     }
 
+    /** This gate's address */
+    get address() {
+        return generateAddress(this.fields.x || 0, this.fields.height || 0, this.fields.y || 0, SharedVars.spaceID)
+    }
+
     /** Called on click */
     onClick() {
 
         // Show the DHD interface
-        this.plugin.menus.displayPopup({
-            title: 'Stargate Interface',
-            panel: {
-                iframeURL: this.plugin.paths.absolute('dhd-interface.html'),
-            }
-        })
+        // this.plugin.menus.displayPopup({
+        //     title: 'Stargate Interface',
+        //     panel: {
+        //         iframeURL: this.plugin.paths.absolute('dhd-interface.html'),
+        //     }
+        // })
 
         // Stop if queue is running
-        // if (this.queue.isRunning)
-        //     return console.debug(`[Stargate] Clicked, but queue is still running`)
+        if (this.queue.isRunning)
+            return console.debug(`[Stargate] Clicked, but queue is still running`)
 
-        // // Activate the stargate
-        // if (this.connection)
-        //     this.close()
-        // else
-        //     this.dial("000000")
+        // Activate the stargate
+        if (this.connection)
+            this.close()
+        else
+            this.dial("000000")
 
     }
 

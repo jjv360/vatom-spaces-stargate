@@ -1,3 +1,5 @@
+import * as shajs from 'sha.js'
+
 /**
  * Shared vars
  */
@@ -5,6 +7,9 @@ export const SharedVars = {
 
     /** @type {StargatePlugin} Reference to the main plugin instance */
     plugin: null,
+
+    /** The unique ID of the current space */
+    spaceID: '',
 
     /** Plugin instance ID, a random identifier for this instance of the plugin */
     instanceID: Math.random().toFixed(36).substring(2)
@@ -140,4 +145,81 @@ export async function animateAudioVolume(objectID, fromVolume, toVolume, duratio
 
     })
 
+}
+
+/** Generate a stargate address */
+export function generateAddress(x, y, z, spaceID, metaverseOrigin = [0]) {
+
+    // Round the address to the nearest 100 meters
+    x = Math.round(x / 100) * 100
+    y = Math.round(y / 100) * 100
+    z = Math.round(z / 100) * 100
+
+    // Create point of origin
+    let pointOfOrigin = metaverseOrigin
+
+    // Create address string
+    let address = `${x}:${y}:${z}:${spaceID}`
+
+    // Get the SHA256 of the address
+    let shaHex = shajs('sha256').update(address).digest('hex')
+
+    // Get an array of digits in base10
+    let shaInt = BigInt("0x" + shaHex)
+    let shaDigitsBase10 = shaInt.toString(10).split('').map(s => parseInt(s))
+
+    // Convert to an array of digits in base 39 and take the first 6 digits
+    let digits = convertToBase39(shaDigitsBase10).slice(0, 6)
+
+    // For each digit, ensure it doesn't already exist. If it does, increment it until it doesn't.
+    for (let i = 0 ; i < digits.length ; i++) {
+
+        // Get the digit
+        let digit = digits[i]
+
+        // Check and increment
+        while (pointOfOrigin.includes(digit) || digits.slice(0, i).includes(digit)) {
+            digit += 1
+            if (digit >= 39) digit = 0
+            digits[i] = digit
+        }
+
+    }
+
+    // Add the point of origin to the end
+    digits = digits.concat(pointOfOrigin)
+
+    // Convert to a string, then we're done
+    return digits.map(n => GlyphMap[n]).join('')
+
+}
+
+/** Glyph map */
+export const GlyphMap = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ+-="
+
+/** Convert an array of digits in base 10 to an array of digits in base 39 ... thanks ChatGPT for this */
+function convertToBase39(digits) {
+    const base39Chars = GlyphMap;
+    let base39Number = "";
+  
+    let quotients = [0];
+    for (let i = digits.length - 1; i >= 0; i--) {
+      let carry = 0;
+      for (let j = 0; j < quotients.length; j++) {
+        const accumulator = quotients[j] * 10 + digits[i] + carry;
+        const quotient = Math.floor(accumulator / 39);
+        const remainder = accumulator % 39;
+        quotients[j] = remainder;
+        carry = quotient;
+      }
+      if (carry > 0) {
+        quotients.push(carry);
+      }
+    }
+  
+    for (let i = 0; i < quotients.length; i++) {
+      base39Number = base39Chars[quotients[i]] + base39Number;
+    }
+  
+    return base39Number.split('').map(s => base39Chars.indexOf(s));
 }

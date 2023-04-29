@@ -18,13 +18,15 @@ export default class StargatePlugin extends BasePlugin {
     static name = "Stargate"
 
     /** Called on load */
-    onLoad() {
-
-        // Stargate plugin loading
-        console.debug('[Stargate] Loaded v' + require('../package.json').version)
+    async onLoad() {
 
         // Store reference
         SharedVars.plugin = this
+        SharedVars.spaceID = await this.world.getInstanceID()
+        self.SharedVars = SharedVars
+
+        // Stargate plugin loading
+        console.debug(`[Stargate] Loaded v${require('../package.json').version}`)
 
         // Register components
         StargateComponent.register(this)
