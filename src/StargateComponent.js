@@ -1,5 +1,5 @@
 import { BaseComponent } from "vatom-spaces-plugins"
-import { Queue, animateAudioVolume, animateValue, createLoopingAudio } from "./Utils"
+import { Queue, SharedVars, animateAudioVolume, animateValue, createLoopingAudio } from "./Utils"
 
 /**
  * Logic behind the Stargate.
@@ -41,15 +41,23 @@ export class StargateComponent extends BaseComponent {
     /** Called on click */
     onClick() {
 
-        // Stop if queue is running
-        if (this.queue.isRunning)
-            return console.debug(`[Stargate] Clicked, but queue is still running`)
+        // Show the DHD interface
+        this.plugin.menus.displayPopup({
+            title: 'Stargate Interface',
+            panel: {
+                iframeURL: this.plugin.paths.absolute('dhd-interface.html'),
+            }
+        })
 
-        // Activate the stargate
-        if (this.connection)
-            this.close()
-        else
-            this.dial("000000")
+        // Stop if queue is running
+        // if (this.queue.isRunning)
+        //     return console.debug(`[Stargate] Clicked, but queue is still running`)
+
+        // // Activate the stargate
+        // if (this.connection)
+        //     this.close()
+        // else
+        //     this.dial("000000")
 
     }
 

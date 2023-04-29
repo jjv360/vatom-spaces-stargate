@@ -6,6 +6,9 @@ export const SharedVars = {
     /** @type {StargatePlugin} Reference to the main plugin instance */
     plugin: null,
 
+    /** Plugin instance ID, a random identifier for this instance of the plugin */
+    instanceID: Math.random().toFixed(36).substring(2)
+
 }
 
 /**

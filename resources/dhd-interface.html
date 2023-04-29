@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Interface</title>
+</head>
+<body>
+
+    <!-- Style -->
+    <style>
+
+        /* General */
+        html, body {
+            margin: 0px;
+            padding: 0px;
+            font-family: 'Courier New', Courier, monospace; 
+            color: #00FFF0;
+        }
+
+        /* Gate icon */
+        #icon-container {
+            position: relative; 
+            height: 200px; 
+        }
+        #icon-container > #gate-icon {
+            position: absolute; 
+            top: calc(50% - 64px); 
+            left: calc(50% - 64px); 
+            width: 128px; 
+            height: 128px; 
+            background-color: #333;
+            mask-image: url('stargate-icon.png'); 
+            mask-size: contain; 
+            mask-position: center; 
+            mask-repeat: no-repeat; 
+            -webkit-mask-image: url('stargate-icon.png'); 
+            -webkit-mask-size: contain; 
+            -webkit-mask-position: center; 
+            -webkit-mask-repeat: no-repeat; 
+        }
+
+        /* Gate status text */
+        #gate-status {
+            text-align: center; 
+            font-size: 20px; 
+            font-family: 'Courier New', Courier, monospace;
+            margin: 10px 20px 20px 20px; 
+        }
+
+        /** Gate dialing glyphs */
+        #dial-glyphs {
+            text-align: center; 
+            font-size: 24px; 
+            font-family: 'Courier New', Courier, monospace;
+            margin: 40px; 
+        }
+
+        /** A general glyph */
+        .glyph {
+            width: 64px;
+            height: 64px;
+            background-color: #00FFF0;
+            display: inline-block;
+            mask-image: url('MilkyWayGlyphs.png');
+            mask-size: 2048px 384px;
+            mask-position: 0px 0px;
+            mask-repeat: no-repeat;
+            -webkit-mask-image: url('MilkyWayGlyphs.png');
+            -webkit-mask-size: 2048px 384px;
+            -webkit-mask-position: 0px 0px;
+            -webkit-mask-repeat: no-repeat;
+        }
+
+    </style>
+
+    <!-- Top icon -->
+    <div id='icon-container'>
+
+        <!-- Gate icon -->
+        <div id='gate-icon'></div>
+
+    </div>
+
+    <!-- Gate status text -->
+    <div id='gate-status'>Gate connected 2</div>
+
+    <!-- Manual dialing glyphs -->
+    <div id='dial-glyphs'></div>
+
+    <!-- Script -->
+    <script>
+
+        // Called on start
+        window.addEventListener('load', function() {
+
+            // Add all glyphs to the dialing section
+            let glyphContainer = document.getElementById('dial-glyphs')
+            for (let i = 0 ; i < 39 ; i++) {
+
+                // Create and add it
+                let glyph = createGlyph(i, 32)
+                glyphContainer.appendChild(glyph)
+
+            }
+
+        })
+
+        /** Create a glyph DIV */
+        function createGlyph(glyphID, size) {
+
+            // Get offset in the texture atlas
+            let x = (glyphID % 16) * 256 * (size / 256)
+            let y = Math.floor(glyphID / 16) * 256 * (size / 256)
+            let textureWidth = 4096 * (size / 256)
+            let textureHeight = 768 * (size / 256)
+
+            // Create a new glyph
+            let glyphDiv = document.createElement('div')
+            glyphDiv.className = 'glyph'
+            glyphDiv.style.width = size + 'px'
+            glyphDiv.style.height = size + 'px'
+            glyphDiv.style.maskPosition = `-${x}px -${y}px`
+            glyphDiv.style.maskSize = `${textureWidth}px ${textureHeight}px`
+            glyphDiv.style.webkitMaskPosition = `-${x}px -${y}px`
+            glyphDiv.style.webkitMaskSize = `${textureWidth}px ${textureHeight}px`
+
+            // Return glyph DIV
+            return glyphDiv
+
+        }
+
+    </script>
+
+</body>
